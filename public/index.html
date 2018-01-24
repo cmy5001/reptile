@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<style>
+    .container,.btn-container{
+        width: 1000px;
+        margin: 50px auto;
+    }
+    .item{
+        font-size: 20px;
+        color: white;
+        background-color: #bbb;
+        height: 50px;
+        line-height: 50px;
+        text-align: center;
+        border-radius: 10px;
+        margin: 20px 0;
+        text-decoration: none;
+        display: block;
+    }
+    .btn-container{
+        margin-top: 50px;
+        display: -webkit-box;
+        -webkit-box-align: center;
+        -webkit-box-pack: center;
+        height: 50px;
+    }
+    .btn-container .btn{
+        font-size: 20px;
+        color: white;
+        background-color: lightseagreen;
+        height: 50px;
+        width: 300px;
+        line-height: 50px;
+        text-align: center;
+        border-radius: 10px;
+        margin: 0 20px;
+        cursor: pointer;
+    }
+</style>
+<body>
+    <div class="container">
+    </div>
+    <div class="btn-container">
+        <div class="prev btn">上一页</div>
+        <div class="next btn">下一页</div>
+    </div>
+</body>
+<script id="tpl" type="text/html">
+
+    <%for(var i = 0; i < list.length; i++) {%>
+        <a class="item" href="./detail.html?id=<%:=list[i]._id%>"><%:=list[i].title%></a>
+    <%}%>
+</script>
+<script src="./assets/jquery.js"></script>
+<script src="./assets/template.js"></script>
+<script>
+    window.onload = function(){
+        window.template();
+        var page = 1;
+
+        getList();
+        function getList(){
+            $.get('/showImages?page='+page,function(data){
+                var tpl = document.getElementById('tpl').innerHTML;
+                var html = template(tpl, {list: data});
+                $('.container').html(html);
+            })
+        }
+
+
+        $('.prev').click(function(){
+            if(page>1){
+                page--;
+                getList();
+            }
+        });
+        $('.next').click(function(){
+            page++;
+            getList();
+        })
+    }
+</script>
+</html>

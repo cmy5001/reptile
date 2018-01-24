@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<style>
+    .container{
+        width: 1000px;
+        margin: 50px auto;
+    }
+    .container img{
+        display: block;
+        width: 100%;
+        margin: 20px 0;
+    }
+</style>
+<body>
+<div class="container">
+</div>
+</body>
+<script id="tpl" type="text/html">
+
+    <%for(var i = 0; i < list.length; i++) {%>
+    <img src="./<%:=list[i]%>" alt="">
+    <%}%>
+</script>
+<script src="./assets/jquery.js"></script>
+<script src="./assets/template.js"></script>
+<script>
+    window.onload = function(){
+        window.template();
+        var id = location.href.split('id=')[1];
+
+        $.get('/showImages?id='+id,function(data){
+            console.log(data);
+            var tpl = document.getElementById('tpl').innerHTML;
+            var html = template(tpl, data[0]);
+            $('.container').html(html);
+        })
+    }
+</script>
+</html>
