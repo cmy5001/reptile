@@ -167,36 +167,39 @@ router.get('/getImages', function (ctx, next) {
             let matchData = JSON.stringify(bodyData).match(/<h2><a target=.{1,150}<\/a><\/h2>/g);
             //console.log(matchData);
 
-            matchData.forEach(function(val,index){
-                //console.log(val);
-                //if(index>0){
-                //    return;
-                //}
-                let url = val.split('href=\\"')[1];
-                url = 'http://yxpjwnet.com'+url.split('\\" title=')[0];
-                let title = val.split('title=\\"')[1];
-                title = title.split('\\">')[0];
-                console.log(url);
-                console.log(title);
+            if(matchData){
 
-                Theme.find({title:title}, function (err, docs) {
-                    // docs.forEach
-                    err && console.log(err);
-                    if(docs && docs.length){
-                    }else{
-                        var theme = new Theme();
-                        theme.page = indexNumber;
-                        theme.index = index;
-                        theme.title = title;
-                        theme.list = [];
-                        theme.date = new Date();
-                        getOneTheme(url,theme);
-                    }
+                matchData.forEach(function(val,index){
+                    //console.log(val);
+                    //if(index>0){
+                    //    return;
+                    //}
+                    let url = val.split('href=\\"')[1];
+                    url = 'http://yxpjwnet.com'+url.split('\\" title=')[0];
+                    let title = val.split('title=\\"')[1];
+                    title = title.split('\\">')[0];
+                    console.log(url);
+                    console.log(title);
+
+                    Theme.find({title:title}, function (err, docs) {
+                        // docs.forEach
+                        err && console.log(err);
+                        if(docs && docs.length){
+                        }else{
+                            var theme = new Theme();
+                            theme.page = indexNumber;
+                            theme.index = index;
+                            theme.title = title;
+                            theme.list = [];
+                            theme.date = new Date();
+                            getOneTheme(url,theme);
+                        }
+
+                    });
+
 
                 });
-
-
-            });
+            }
             setTimeout(function(){
                 indexNumber++;
                 console.log('下一主页...');
@@ -234,13 +237,15 @@ router.get('/getImages', function (ctx, next) {
             let matchData = JSON.stringify(body).match(/http:\/\/images.zhaofulipic.com:8818\/allimg\/\d+\/\w+-\d{1,3}\.jpg/g);
             //downloadAsyn(matchData, dir);
 
-            matchData.forEach(function(val,index){
+            if(matchData){
+                matchData.forEach(function(val,index){
 
-                let filename = val.match(/\w+-\d+\.jpg/)[0];
-                filename = md5(filename+new Date().getTime());
-                theme.list.push(filename);
-                download(val,dir,filename);
-            });
+                    let filename = val.match(/\w+-\d+\.jpg/)[0];
+                    filename = md5(filename+new Date().getTime());
+                    theme.list.push(filename);
+                    download(val,dir,filename);
+                });
+            }
             pageNumber++;
             console.log('下一页...');
             getOnePage(pageUrl,pageNumber,theme);
