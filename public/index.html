@@ -60,7 +60,8 @@
 <script>
     window.onload = function(){
         window.template();
-        var page = 1;
+
+        var page = location.href.split('page=')[1] || 1;
 
         getList();
         function getList(){
@@ -75,12 +76,12 @@
         $('.prev').click(function(){
             if(page>1){
                 page--;
-                getList();
+                location.href = location.origin+location.pathname+'?page='+page
             }
         });
         $('.next').click(function(){
             page++;
-            getList();
+            location.href = location.origin+location.pathname+'?page='+page
         })
     }
 </script>
