@@ -201,7 +201,7 @@ router.get('/getImages', function (ctx, next) {
                 indexNumber++;
                 console.log('下一主页...');
                 getOneIndexPage(indexNumber);
-            },30000);
+            },10000);
 
         });
     }
