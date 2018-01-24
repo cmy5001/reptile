@@ -101,7 +101,7 @@ router.get('/showImages', async function(ctx, next){
 
 router.get('/getImages', function (ctx, next) {
     // ctx.router available
-
+    let page = ctx.request.query.page;
 
     let i = 0;
 
@@ -150,10 +150,11 @@ router.get('/getImages', function (ctx, next) {
         });
     };
 
-    let indexNumber = 1;
+    let indexNumber = page || 1;
     getOneIndexPage(indexNumber);
 
     function getOneIndexPage(indexNumber){
+        console.log('——————————————————————主页:'+indexNumber+'---------------------');
         request({url:'http://yxpjwnet.com/page/'+indexNumber+'.html',gzip:true,encoding: null}, function (error, response, body) {
             console.log('error:', error); // Print the error if one occurred
             console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
