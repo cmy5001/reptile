@@ -19,8 +19,6 @@ mongoose.connect('mongodb://localhost:27017/zfl');
 var Schema = mongoose.Schema;
 
 var ThemeSchema = new Schema({
-    page      : Number,
-    index     : Number,
     title     : String,
     list      : Array,
     date      : Date
@@ -84,7 +82,7 @@ router.get('/showImages', async function(ctx, next){
                 });
             }else if(page){
                 let skip = pageSize*(page-1);
-                Theme.find(param).skip(skip).limit(pageSize).sort({date:1}).exec(function (err, docs) {
+                Theme.find(param).skip(skip).limit(pageSize).sort({date:-1}).exec(function (err, docs) {
                     console.log(docs);
                     if(err){
                         console.log('ERROr');
@@ -103,33 +101,33 @@ router.get('/getImages', function (ctx, next) {
     // ctx.router available
     let page = ctx.request.query.page;
 
-    let i = 0;
-
-    // 主要方法，用于下载文件
-    var downloadAsyn = function(urls, dir){
-        let filename = urls[i].split('161023/')[1];
-        request({uri: urls[i], encoding: 'binary'}, function (error, response, body) {
-            console.log(filename);
-            if (!error && response.statusCode == 200) {
-                if (!body)  console.log("(╥╯^╰╥)哎呀没有内容。。。")
-                fs.writeFile(dir + '/' + filename, body, 'binary', function (err) {
-                    if (err) {
-                        console.log(err);
-                    }
-                    console.log('o(*￣▽￣*)o偷偷下载' + dir + '/' + filename + ' done');
-                    i++;
-                    if(i<urls.length){
-                        downloadAsyn(urls,dir);
-                    }
-                });
-            }else{
-
-                console.log('error!');
-                console.log(error);
-                console.log(response);
-            }
-        });
-    };
+    //let i = 0;
+    //
+    //// 主要方法，用于下载文件
+    //var downloadAsyn = function(urls, dir){
+    //    let filename = urls[i].split('161023/')[1];
+    //    request({uri: urls[i], encoding: 'binary'}, function (error, response, body) {
+    //        console.log(filename);
+    //        if (!error && response.statusCode == 200) {
+    //            if (!body)  console.log("(╥╯^╰╥)哎呀没有内容。。。")
+    //            fs.writeFile(dir + '/' + filename, body, 'binary', function (err) {
+    //                if (err) {
+    //                    console.log(err);
+    //                }
+    //                console.log('o(*￣▽￣*)o偷偷下载' + dir + '/' + filename + ' done');
+    //                i++;
+    //                if(i<urls.length){
+    //                    downloadAsyn(urls,dir);
+    //                }
+    //            });
+    //        }else{
+    //
+    //            console.log('error!');
+    //            console.log(error);
+    //            console.log(response);
+    //        }
+    //    });
+    //};
 
     var download = function(url, dir,filename){
         request({uri: url, encoding: 'binary'}, function (error, response, body) {
@@ -150,7 +148,7 @@ router.get('/getImages', function (ctx, next) {
         });
     };
 
-    let indexNumber = page || 1;
+    let indexNumber = page || 61;
     getOneIndexPage(indexNumber);
 
     function getOneIndexPage(indexNumber){
@@ -165,16 +163,12 @@ router.get('/getImages', function (ctx, next) {
                 console.log('爬完了');
                 return;
             }
-            let matchData = JSON.stringify(bodyData).match(/<h2><a target=.{1,150}<\/a><\/h2>/g);
+            let matchData = JSON.stringify(bodyData).match(/<h2><a target=.{1,200}<\/a><\/h2>/g);
             //console.log(matchData);
 
-            if(matchData){
-
-                matchData.forEach(function(val,index){
-                    //console.log(val);
-                    //if(index>0){
-                    //    return;
-                    //}
+            if(matchData && matchData.length){
+                for(var i = matchData.length-1;i>=0;i--){
+                    var val = matchData[i];
                     let url = val.split('href=\\"')[1];
                     url = 'http://yxpjwnet.com'+url.split('\\" title=')[0];
                     let title = val.split('title=\\"')[1];
@@ -188,8 +182,6 @@ router.get('/getImages', function (ctx, next) {
                         if(docs && docs.length){
                         }else{
                             var theme = new Theme();
-                            theme.page = indexNumber;
-                            theme.index = index;
                             theme.title = title;
                             theme.list = [];
                             theme.date = new Date();
@@ -197,15 +189,16 @@ router.get('/getImages', function (ctx, next) {
                         }
 
                     });
+                }
 
-
-                });
             }
-            setTimeout(function(){
-                indexNumber++;
-                console.log('下一主页...');
-                getOneIndexPage(indexNumber);
-            },10000);
+            if(indexNumber>1){
+                setTimeout(function(){
+                    indexNumber--;
+                    console.log('下一主页...');
+                    getOneIndexPage(indexNumber);
+                },10000);
+            }
 
         });
     }
