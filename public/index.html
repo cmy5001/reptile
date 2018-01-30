@@ -41,13 +41,107 @@
         margin: 0 20px;
         cursor: pointer;
     }
+    .tag-container{
+        max-width: 800px;
+        margin: 50px auto 0;
+    }
+    .tag-container .tag{
+        height: 35px;
+        line-height: 35px;
+        font-size: 30px;
+        font-weight: bold;
+        background-color: lightskyblue;
+        padding: 0 30px;
+        color: white;
+        float: left;
+        margin-top: 15px;
+        margin-right: 40px;
+        border-radius: 10px;
+        cursor: pointer;
+    }
+    .search-container{
+        margin-top: 30px;
+        display: -webkit-box;
+        -webkit-box-align: center;
+        -webkit-box-pack: center;
+        height: 50px;
+    }
+    .tag-container:after{
+        content: '';
+        clear: both;
+        display: block;
+        height:0;
+        visibility:hidden;
+    }
+    .search-container .input{
+        display: block;
+        width: 300px;
+        height: 50px;
+        line-height: 50px;
+        border: none;
+        padding: 0;
+        background-color: #eee;
+        margin-right:50px;
+        font-size: 20px;
+        text-indent: 20px;
+    }
+    .search-container .search-btn{
+        height: 50px;
+        line-height: 50px;
+        width: 100px;
+        text-align: center;
+        color: white;
+        border-radius: 10px;
+        background-color: lightseagreen;
+        cursor: pointer;
+    }
+    .header{
+        margin-top: 30px;
+        display: -webkit-box;
+        -webkit-box-align: center;
+        -webkit-box-pack: center;
+        height: 50px;
+    }
+    .header .page-text{
+        color: lightcoral;
+        font-size: 40px;
+        line-height: 50px;
+        margin: 0 50px;
+    }
+    .header .tag-text{
+        height: 50px;
+        line-height: 50px;
+        background-color: lightskyblue;
+        padding: 0 30px;
+        color: white;
+        font-size: 40px;
+        border-radius: 10px;
+        margin: 0 50px;
+    }
+    .header .search-text{
+        color: #999;
+        font-size: 40px;
+        line-height: 50px;
+        margin: 0 50px;
+    }
 </style>
 <body>
+    <div class="header">
+        <div class="page-text">9</div>
+        <div class="tag-text">标签</div>
+        <div class="search-text">关键字</div>
+    </div>
+    <div class="search-container">
+        <input type="text" class="input">
+        <div class="search-btn">搜索</div>
+    </div>
     <div class="container">
     </div>
     <div class="btn-container">
         <div class="prev btn">上一页</div>
         <div class="next btn">下一页</div>
+    </div>
+    <div class="tag-container">
     </div>
 </body>
 <script id="tpl" type="text/html">
@@ -62,11 +156,28 @@
     window.onload = function(){
         window.template();
 
-        var page = location.href.split('page=')[1] || 1;
+        function getSearch(){
+            var search = location.search.split('?')[1];
+            var obj = {};
+            if(search){
+                var searchArray = search.split('&');
+                searchArray.forEach(function(item,index){
+                    var opt = item.split('=');
+                    obj[opt[0]] = opt[1];
+                })
+            }
+            return obj;
+        }
+        var searchObj = getSearch();
+
+        var page = searchObj.page || 1;
+        var tag = searchObj.tag || '';
+        var title = searchObj.title || '';
 
         getList();
         function getList(){
-            $.get('/showImages?page='+page,function(data){
+
+            $.get('/showImages',{page:page,tag:tag,title:title},function(data){
                 var tpl = document.getElementById('tpl').innerHTML;
                 var html = template(tpl, {list: data});
                 $('.container').html(html);
@@ -83,6 +194,18 @@
         $('.next').click(function(){
             page++;
             location.href = location.origin+location.pathname+'?page='+page
+        });
+        var tags = ['无圣光','极品萝莉','推女郎','CHOKmoson', '柚木', '土肥圆矮挫穷', '小鸟酱', 'TuiGirl', 'XIUREN', 'Graphis', 'PR社', '露出自拍', '疯狂的爱丽丝', 'VIP', 'SK丝库', '大尺度', '爱丝AISS', '唐兴', 'wanimal', '秀人网', '极品美模', '极品嫩妹', '福利姬', '闫盼盼', '布丁酱', '尤蜜荟', '弱气乙女', '完具少女', '刘钰儿', '丝袜美腿极欲调教', '尤果网', '木奈奈', 'YouMi', '魅妍社', '摄影师', '嗲囡囡', '私拍', '网络红人', 'Tpimage', 'Mistar', '若兮', 'PLAYBOY', 'LegBaby', 'Ugirls', '我是女王', '小果酱', '蜜桃社', '私人玩物', '宋-KiKi', '悦爷妖精', '撸管必备', '夏小秋秋秋', 'Egg-尤妮丝', 'MASKED QUEEN', '王语纯', '假面女皇', '松果儿', '微博红人', '大屌萌妹', 'OWAKADO'];
+        var html = '';
+        tags.forEach(function(item,index){
+            html += '<div class="tag">'+item+'</div>';
+        });
+        $('.tag-container').append(html);
+        $('.tag').click(function(){
+            location.href = '/index.html?tag='+$(this).text();
+        })
+        $('.search-btn').click(function(){
+            location.href = '/index.html?title='+$('.input').val();
         })
     }
 </script>

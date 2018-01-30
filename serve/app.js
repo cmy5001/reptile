@@ -64,12 +64,32 @@ var dir = path.join(__dirname + '/../images');
 router.get('/showImages', async function(ctx, next){
     let id = ctx.request.query.id;
     let page = ctx.request.query.page;
+    let tag = ctx.request.query.tag;
+    let title = ctx.request.query.title;
     let pageSize = 10;
-
 
     ctx.body = await new Promise(function(resolve,reject){
             let param = {};
-            if(id){
+            if(tag){
+                let skip = pageSize*(page-1);
+                Theme.find({ tags:{ $in: tag}}).skip(skip).limit(pageSize).sort({date:-1}).exec(function (err, docs) {
+                    if(err){
+                        console.log('ERROr');
+                        return resolve(-2);
+                    }
+                    return resolve(docs);
+                });
+
+            }else if(title){
+                let skip = pageSize*(page-1);
+                Theme.find({ title:{ $in: title}}).skip(skip).limit(pageSize).sort({date:-1}).exec(function (err, docs) {
+                    if(err){
+                        console.log('ERROr');
+                        return resolve(-2);
+                    }
+                    return resolve(docs);
+                });
+            }else if(id){
                 param._id = id;
                 Theme.find(param, function (err, docs) {
 
