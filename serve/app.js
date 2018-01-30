@@ -73,7 +73,7 @@ router.get('/showImages', async function(ctx, next){
             if(tag){
                 let skip = pageSize*(page-1);
                 console.log(tag);
-                Theme.find({ tags:tag}).skip(skip).limit(pageSize).sort({date:-1}).exec(function (err, docs) {
+                Theme.find({ tags:decodeURIComponent(tag)}).skip(skip).limit(pageSize).sort({date:-1}).exec(function (err, docs) {
                     if(err){
                         console.log('ERROr');
                         return resolve(-2);
@@ -83,7 +83,7 @@ router.get('/showImages', async function(ctx, next){
 
             }else if(title){
                 let skip = pageSize*(page-1);
-                let reg = new RegExp(title);
+                let reg = new RegExp(decodeURIComponent(title));
                 Theme.find({ title: reg}).skip(skip).limit(pageSize).sort({date:-1}).exec(function (err, docs) {
                     if(err){
                         console.log('ERROr');
