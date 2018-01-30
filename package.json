@@ -233,6 +233,7 @@
       "resolved": "https://registry.npmjs.org/type-is/-/type-is-1.6.15.tgz",
       "version": "1.6.15"
     },
+    "urlencode2": "^1.0.1",
     "vary": {
       "integrity": "sha1-IpnwLG3tMNSllhsLn3RSShj2NPw=",
       "resolved": "https://registry.npmjs.org/vary/-/vary-1.1.2.tgz",
