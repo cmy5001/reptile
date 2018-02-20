@@ -347,9 +347,13 @@ router.get('/getImages', function (ctx, next) {
 
     function getOneIndexPage(indexNumber){
         console.log('——————————————————————主页:'+indexNumber+'---------------------');
+        console.log('http://yxpjwnet.com/page/'+indexNumber+'.html');
         request({url:'http://yxpjwnet.com/page/'+indexNumber+'.html',gzip:true,encoding: null}, function (error, response, body) {
-            console.log('error:', error); // Print the error if one occurred
-            console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
+            if(error){
+                console.log('error:', error); // Print the error if one occurred
+                console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
+                return;
+            }
             //console.log(body);
             let bodyData = iconv.decode(body,'gb2312').toString();
             //console.log(bodyData);
