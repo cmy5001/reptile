@@ -154,8 +154,8 @@ router.get('/getImagesByTag', function (ctx, next) {
     function getOneTag(tag){
 
         console.log('——————————————————————tag:'+tag+'---主页:'+tagPageNumber+'---------------------');
-        //let url = 'http://yxpjwnet.com/tags.php?/%59%6F%75%4D%69/1/';
-        let url = 'http://yxpjwnet.com/tags.php?/'+urlencode(tag,'gb2312')+'/'+tagPageNumber+'/';
+        //let url = 'http://yxpjwnet1.com/tags.php?/%59%6F%75%4D%69/1/';
+        let url = 'http://yxpjwnet1.com/tags.php?/'+urlencode(tag,'gb2312')+'/'+tagPageNumber+'/';
         console.log(url);
         request({url:url,gzip:true,encoding: null}, function (error, response, body) {
             console.log('error:', error); // Print the error if one occurred
@@ -186,7 +186,7 @@ router.get('/getImagesByTag', function (ctx, next) {
                 for(var i = 0;i<matchData.length;i++){
                     var val = matchData[i];
                     let url = val.split('href=\\"')[1];
-                    url = 'http://yxpjwnet.com'+url.split('\\" title=')[0];
+                    url = 'http://yxpjwnet1.com'+url.split('\\" title=')[0];
                     let title = val.split('title=\\"')[1];
                     title = title.split('\\">')[0];
                     console.log(url);
@@ -236,7 +236,7 @@ router.get('/getImagesByTag', function (ctx, next) {
     }
 
 
-    //getOneTheme('http://yxpjwnet.com/luyilu/2016/1023/2532.html');
+    //getOneTheme('http://yxpjwnet1.com/luyilu/2016/1023/2532.html');
 
     function getOneTheme(pageUrl,theme){
         let pageNumber = 1;
@@ -347,8 +347,8 @@ router.get('/getImages', function (ctx, next) {
 
     function getOneIndexPage(indexNumber){
         console.log('——————————————————————主页:'+indexNumber+'---------------------');
-        console.log('http://yxpjwnet.com/page/'+indexNumber+'.html');
-        request({url:'http://yxpjwnet.com/page/'+indexNumber+'.html',gzip:true,encoding: null}, function (error, response, body) {
+        console.log('http://yxpjwnet1.com/page/'+indexNumber+'.html');
+        request({url:'http://yxpjwnet1.com/page/'+indexNumber+'.html',gzip:true,encoding: null}, function (error, response, body) {
             if(error){
                 console.log('error:', error); // Print the error if one occurred
                 console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
@@ -368,7 +368,7 @@ router.get('/getImages', function (ctx, next) {
                 for(var i = matchData.length-1;i>=0;i--){
                     var val = matchData[i];
                     let url = val.split('href=\\"')[1];
-                    url = 'http://yxpjwnet.com'+url.split('\\" title=')[0];
+                    url = 'http://yxpjwnet1.com'+url.split('\\" title=')[0];
                     let title = val.split('title=\\"')[1];
                     title = title.split('\\">')[0];
                     console.log(url);
@@ -401,7 +401,7 @@ router.get('/getImages', function (ctx, next) {
         });
     }
 
-    //getOneTheme('http://yxpjwnet.com/luyilu/2016/1023/2532.html');
+    //getOneTheme('http://yxpjwnet1.com/luyilu/2016/1023/2532.html');
 
     function getOneTheme(pageUrl,theme){
         let pageNumber = 1;
