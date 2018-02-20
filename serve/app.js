@@ -414,6 +414,10 @@ router.get('/getImages', function (ctx, next) {
             url = pageUrl;
         }
         request(url, function (error, response, body) {
+            if(error){
+                console.log('error:');
+                console.log(error);
+            }
             if(!body.match('<!DOCTYPE HTML>')){
                 console.log('这一页没东西了');
 
