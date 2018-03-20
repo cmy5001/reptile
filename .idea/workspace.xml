@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="9f75a1cf-49e9-46a3-8126-77e1a124cc8f" name="Default" comment="">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/serve/app.js" afterPath="$PROJECT_DIR$/serve/app.js" />
     </list>
     <ignored path="reptile.iws" />
@@ -26,9 +27,11 @@
       <file leaf-file-name="app.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/serve/app.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="1.0854225">
-              <caret line="440" column="64" selection-start-line="440" selection-start-column="64" selection-end-line="440" selection-end-column="64" />
-              <folding />
+            <state vertical-scroll-proportion="0.5162488">
+              <caret line="87" column="35" selection-start-line="87" selection-start-column="35" selection-end-line="87" selection-end-column="35" />
+              <folding>
+                <element signature="e#3549#9751#0" expanded="false" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -352,7 +355,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
+          <folding>
+            <element signature="e#3549#9751#0" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -416,7 +421,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="67" column="40" selection-start-line="67" selection-start-column="40" selection-end-line="67" selection-end-column="40" />
-          <folding />
+          <folding>
+            <element signature="e#3549#9751#0" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -558,9 +565,11 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/serve/app.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="1.0854225">
-          <caret line="440" column="64" selection-start-line="440" selection-start-column="64" selection-end-line="440" selection-end-column="64" />
-          <folding />
+        <state vertical-scroll-proportion="0.5162488">
+          <caret line="87" column="35" selection-start-line="87" selection-start-column="35" selection-end-line="87" selection-end-column="35" />
+          <folding>
+            <element signature="e#3549#9751#0" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>

@@ -83,9 +83,11 @@ router.get('/showImages', async function(ctx, next){
 
             }else if(title){
                 let skip = pageSize*(page-1);
-                //let reg = new RegExp(decodeURIComponent(title));
+                let reg = new RegExp(decodeURIComponent(title),'i');
                 let array = decodeURIComponent(title).split(' ');
-                let reg = new RegExp(array.join('|'),"i");
+                if(array.length>1){
+                    reg = new RegExp('('+array.join(')+(\\S)*(')+')+','i');
+                }
                 Theme.find({ title: reg}).skip(skip).limit(pageSize).sort({date:-1}).exec(function (err, docs) {
                     if(err){
                         console.log('ERROr');
