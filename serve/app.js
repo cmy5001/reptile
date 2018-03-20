@@ -296,6 +296,7 @@ router.get('/getImagesByTag', function (ctx, next) {
 router.get('/getImages', function (ctx, next) {
     // ctx.router available
     let page = ctx.request.query.page;
+    let host = ctx.request.query.host || '1';
 
     //let i = 0;
     //
@@ -349,8 +350,8 @@ router.get('/getImages', function (ctx, next) {
 
     function getOneIndexPage(indexNumber){
         console.log('——————————————————————主页:'+indexNumber+'---------------------');
-        console.log('http://yxpjwnet3.com/page/'+indexNumber+'.html');
-        request({url:'http://yxpjwnet3.com/page/'+indexNumber+'.html',gzip:true,encoding: null}, function (error, response, body) {
+        console.log('http://yxpjwnet'+host+'.com/page/'+indexNumber+'.html');
+        request({url:'http://yxpjwnet'+host+'.com/page/'+indexNumber+'.html',gzip:true,encoding: null}, function (error, response, body) {
             if(error){
                 console.log('error:', error); // Print the error if one occurred
                 console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
@@ -370,7 +371,7 @@ router.get('/getImages', function (ctx, next) {
                 for(var i = matchData.length-1;i>=0;i--){
                     var val = matchData[i];
                     let url = val.split('href=\\"')[1];
-                    url = 'http://yxpjwnet3.com'+url.split('\\" title=')[0];
+                    url = 'http://yxpjwnet'+host+'.com'+url.split('\\" title=')[0];
                     let title = val.split('title=\\"')[1];
                     title = title.split('\\">')[0];
                     console.log(url);
@@ -403,7 +404,6 @@ router.get('/getImages', function (ctx, next) {
         });
     }
 
-    //getOneTheme('http://yxpjwnet3.com/luyilu/2016/1023/2532.html');
 
     function getOneTheme(pageUrl,theme){
         let pageNumber = 1;
