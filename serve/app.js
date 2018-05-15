@@ -128,9 +128,11 @@ router.get('/showImages', async function(ctx, next){
 router.get('/getImagesByTag', function (ctx, next) {
     // ctx.router available
 
-    let tags = ['无圣光','极品萝莉','推女郎','CHOKmoson', '柚木', '土肥圆矮挫穷', '小鸟酱', 'TuiGirl', 'XIUREN', 'Graphis', 'PR社', '露出自拍', '疯狂的爱丽丝', 'VIP', 'SK丝库', '大尺度', '爱丝AISS', '唐兴', 'wanimal', '秀人网', '极品美模', '极品嫩妹', '福利姬', '闫盼盼', '布丁酱', '尤蜜荟', '弱气乙女', '完具少女', '刘钰儿', '丝袜美腿极欲调教', '尤果网', '木奈奈', 'YouMi', '魅妍社', '摄影师', '嗲囡囡', '私拍', '网络红人', 'Tpimage', 'Mistar', '若兮', 'PLAYBOY', 'LegBaby', 'Ugirls', '我是女王', '小果酱', '蜜桃社', '私人玩物', '宋-KiKi', '悦爷妖精', '撸管必备', '夏小秋秋秋', 'Egg-尤妮丝', 'MASKED QUEEN', '王语纯', '假面女皇', '松果儿', '微博红人', '大屌萌妹', 'OWAKADO'];
+    let tags = ['无圣光'];
+    //let tags = ['无圣光','极品萝莉','推女郎','CHOKmoson', '柚木', '土肥圆矮挫穷', '小鸟酱', 'TuiGirl', 'XIUREN', 'Graphis', 'PR社', '露出自拍', '疯狂的爱丽丝', 'VIP', 'SK丝库', '大尺度', '爱丝AISS', '唐兴', 'wanimal', '秀人网', '极品美模', '极品嫩妹', '福利姬', '闫盼盼', '布丁酱', '尤蜜荟', '弱气乙女', '完具少女', '刘钰儿', '丝袜美腿极欲调教', '尤果网', '木奈奈', 'YouMi', '魅妍社', '摄影师', '嗲囡囡', '私拍', '网络红人', 'Tpimage', 'Mistar', '若兮', 'PLAYBOY', 'LegBaby', 'Ugirls', '我是女王', '小果酱', '蜜桃社', '私人玩物', '宋-KiKi', '悦爷妖精', '撸管必备', '夏小秋秋秋', 'Egg-尤妮丝', 'MASKED QUEEN', '王语纯', '假面女皇', '松果儿', '微博红人', '大屌萌妹', 'OWAKADO'];
     //let tags = ['土肥圆矮挫穷','YouMi'];
-
+    let host = ctx.request.query.host || '4';
+    let page = ctx.request.query.page || '110';
 
     var download = function(url, dir,filename){
         request({uri: url, encoding: 'binary'}, function (error, response, body) {
@@ -152,7 +154,7 @@ router.get('/getImagesByTag', function (ctx, next) {
     };
 
     let tagIndex = 0;
-    let tagPageNumber = 1;
+    let tagPageNumber = page || 110;
     getOneTag(tags[tagIndex]);
 
 
@@ -161,7 +163,7 @@ router.get('/getImagesByTag', function (ctx, next) {
 
         console.log('——————————————————————tag:'+tag+'---主页:'+tagPageNumber+'---------------------');
         //let url = 'http://yxpjwnet3.com/tags.php?/%59%6F%75%4D%69/1/';
-        let url = 'http://yxpjwnet3.com/tags.php?/'+urlencode(tag,'gb2312')+'/'+tagPageNumber+'/';
+        let url = resourceHost[host]+'/tags.php?/'+urlencode(tag,'gb2312')+'/'+tagPageNumber+'/';
         console.log(url);
         request({url:url,gzip:true,encoding: null}, function (error, response, body) {
             console.log('error:', error); // Print the error if one occurred
@@ -169,7 +171,7 @@ router.get('/getImagesByTag', function (ctx, next) {
                 setTimeout(function(){
                     if(tags[tagIndex+1]){
                         tagIndex++;
-                        tagPageNumber = 1;
+                        tagPageNumber = 110;
                         console.log('下一tag...');
                         getOneTag(tags[tagIndex]);
                     }else{
@@ -185,6 +187,10 @@ router.get('/getImagesByTag', function (ctx, next) {
                 console.log('爬完了');
                 return;
             }
+            if(tagPageNumber<1){
+                console.log('爬完了');
+                return;
+            }
             let matchData = JSON.stringify(bodyData).match(/<h2><a target=.{1,200}<\/a><\/h2>/g);
             //console.log(matchData);
 
@@ -192,7 +198,7 @@ router.get('/getImagesByTag', function (ctx, next) {
                 for(var i = 0;i<matchData.length;i++){
                     var val = matchData[i];
                     let url = val.split('href=\\"')[1];
-                    url = 'http://yxpjwnet3.com'+url.split('\\" title=')[0];
+                    url = resourceHost[host]+url.split('\\" title=')[0];
                     let title = val.split('title=\\"')[1];
                     title = title.split('\\">')[0];
                     console.log(url);
@@ -222,7 +228,7 @@ router.get('/getImagesByTag', function (ctx, next) {
                 }
 
                 setTimeout(function(){
-                    tagPageNumber++;
+                    tagPageNumber--;
                     console.log('下一tagPage...');
                     getOneTag(tag);
                 },10000);
@@ -231,7 +237,7 @@ router.get('/getImagesByTag', function (ctx, next) {
                 setTimeout(function(){
                     if(tags[tagIndex+1]){
                         tagIndex++;
-                        tagPageNumber = 1;
+                        tagPageNumber = 110;
                         console.log('下一tag...');
                         getOneTag(tags[tagIndex]);
                     }
