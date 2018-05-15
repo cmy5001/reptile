@@ -16,6 +16,8 @@ var urlencode = require('urlencode2');
 const router = new Router();
 mongoose.connect('mongodb://localhost:27017/zfl');
 
+const resourceHost = ['http://yxpjwnet.com','http://yxpjwnet1.com','http://yxpjwnet2.com','http://yxpjwnet3.com','http://fuli010.com'];
+
 
 var Schema = mongoose.Schema;
 
@@ -298,7 +300,7 @@ router.get('/getImagesByTag', function (ctx, next) {
 router.get('/getImages', function (ctx, next) {
     // ctx.router available
     let page = ctx.request.query.page;
-    let host = ctx.request.query.host || '1';
+    let host = ctx.request.query.host || '4';
 
     //let i = 0;
     //
@@ -352,8 +354,8 @@ router.get('/getImages', function (ctx, next) {
 
     function getOneIndexPage(indexNumber){
         console.log('——————————————————————主页:'+indexNumber+'---------------------');
-        console.log('http://yxpjwnet'+host+'.com/page/'+indexNumber+'.html');
-        request({url:'http://yxpjwnet'+host+'.com/page/'+indexNumber+'.html',gzip:true,encoding: null}, function (error, response, body) {
+        console.log(resourceHost[host]+'/page/'+indexNumber+'.html');
+        request({url:resourceHost[host]+'/page/'+indexNumber+'.html',gzip:true,encoding: null}, function (error, response, body) {
             if(error){
                 console.log('error:', error); // Print the error if one occurred
                 console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
@@ -373,7 +375,7 @@ router.get('/getImages', function (ctx, next) {
                 for(var i = matchData.length-1;i>=0;i--){
                     var val = matchData[i];
                     let url = val.split('href=\\"')[1];
-                    url = 'http://yxpjwnet'+host+'.com'+url.split('\\" title=')[0];
+                    url = resourceHost[host]+url.split('\\" title=')[0];
                     let title = val.split('title=\\"')[1];
                     title = title.split('\\">')[0];
                     console.log(url);
