@@ -451,6 +451,15 @@ router.get('/getImages', function (ctx, next) {
             let matchData = JSON.stringify(body).match(/https:\/\/www.images.zhaofulipic.com:8819\/allimg\/\d+\/\w+-\d{1,3}\.jpg/g);
             //downloadAsyn(matchData, dir);
 
+            if(!matchData || !matchData.length){
+                console.log('这一页没东西了');
+
+                theme.save(function (err) {
+                    console.log(err);
+                });
+                return;
+            }
+
             if(matchData){
                 matchData.forEach(function(val,index){
 
