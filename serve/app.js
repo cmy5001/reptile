@@ -453,7 +453,7 @@ router.get('/getImages', function (ctx, next) {
             if(matchData){
                 matchData.forEach(function(val,index){
 
-                    let filename = val.match(/\w+-\d+\.jpg/)[0];
+                    let filename = val.match(/\w+_\w+\.jpg/)[0];
                     filename = md5(filename+new Date().getTime());
                     theme.list.push(filename);
                     download(val,dir,filename);
