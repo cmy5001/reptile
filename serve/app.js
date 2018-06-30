@@ -355,13 +355,14 @@ router.get('/getImages', function (ctx, next) {
         });
     };
 
-    let indexNumber = page || 61;
+    let indexNumber = page || 122;
     getOneIndexPage(indexNumber);
 
     function getOneIndexPage(indexNumber){
         console.log('——————————————————————主页:'+indexNumber+'---------------------');
-        console.log(resourceHost[host]+'/page/'+indexNumber+'.html');
-        request({url:resourceHost[host]+'/page/'+indexNumber+'.html',gzip:true,encoding: null}, function (error, response, body) {
+        //console.log(resourceHost[host]+'/page/'+indexNumber+'.html');
+        console.log(resourceHost[host]+'/luyilu/list_5_'+indexNumber+'.html');
+        request({url:resourceHost[host]+'/luyilu/list_5_'+indexNumber+'.html',gzip:true,encoding: null}, function (error, response, body) {
             if(error){
                 console.log('error:', error); // Print the error if one occurred
                 console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
@@ -447,13 +448,13 @@ router.get('/getImages', function (ctx, next) {
             console.log('pageurl____________');
             console.log(url);
             console.log('_________________');
-            let matchData = JSON.stringify(body).match(/https:\/\/www.images.zhaofulipic.com:8819\/allimg\/\d+\/\w+\.jpg/g);
+            let matchData = JSON.stringify(body).match(/https:\/\/www.images.zhaofulipic.com:8819\/allimg\/\d+\/\w+-\d{1,3}\.jpg/g);
             //downloadAsyn(matchData, dir);
 
             if(matchData){
                 matchData.forEach(function(val,index){
 
-                    let filename = val.match(/\w+_\w+\.jpg/)[0];
+                    let filename = val.match(/\d+\/\w+-\d{1,3}\.jpg/)[0];
                     filename = md5(filename+new Date().getTime());
                     theme.list.push(filename);
                     download(val,dir,filename);
