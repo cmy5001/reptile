@@ -410,7 +410,7 @@ router.get('/getImages', function (ctx, next) {
                     indexNumber--;
                     console.log('下一主页...');
                     getOneIndexPage(indexNumber);
-                },5000);
+                },10000);
             }
 
         });
@@ -436,7 +436,7 @@ router.get('/getImages', function (ctx, next) {
                 console.log('error:');
                 console.log(error);
             }
-            if(!body.match('<!DOCTYPE HTML>')){
+            if(!body || !body.match('<!DOCTYPE HTML>')){
                 console.log('这一页没东西了');
 
                 theme.save(function (err) {
