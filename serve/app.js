@@ -16,7 +16,7 @@ var urlencode = require('urlencode2');
 const router = new Router();
 mongoose.connect('mongodb://localhost:27017/zfl');
 
-const resourceHost = ['http://yxpjwnet.com','http://yxpjwnet1.com','http://yxpjwnet2.com','http://yxpjwnet3.com','http://fuli010.com'];
+const resourceHost = ['http://yxpjwnet.com','http://yxpjwnet1.com','http://yxpjwnet2.com','http://yxpjwnet3.com','http://fuli010.com','https://52zfl.com/'];
 
 
 var Schema = mongoose.Schema;
@@ -306,7 +306,7 @@ router.get('/getImagesByTag', function (ctx, next) {
 router.get('/getImages', function (ctx, next) {
     // ctx.router available
     let page = ctx.request.query.page;
-    let host = ctx.request.query.host || '4';
+    let host = ctx.request.query.host || '5';
 
     //let i = 0;
     //
@@ -384,22 +384,24 @@ router.get('/getImages', function (ctx, next) {
                     url = resourceHost[host]+url.split('\\" title=')[0];
                     let title = val.split('title=\\"')[1];
                     title = title.split('\\">')[0];
-                    console.log(url);
-                    console.log(title);
+                    if(title.indexOf('圣光')!=-1){
+                        console.log(url);
+                        console.log(title);
 
-                    Theme.find({title:title}, function (err, docs) {
-                        // docs.forEach
-                        err && console.log(err);
-                        if(docs && docs.length){
-                        }else{
-                            var theme = new Theme();
-                            theme.title = title;
-                            theme.list = [];
-                            theme.date = new Date();
-                            getOneTheme(url,theme);
-                        }
+                        Theme.find({title:title}, function (err, docs) {
+                            // docs.forEach
+                            err && console.log(err);
+                            if(docs && docs.length){
+                            }else{
+                                var theme = new Theme();
+                                theme.title = title;
+                                theme.list = [];
+                                theme.date = new Date();
+                                getOneTheme(url,theme);
+                            }
 
-                    });
+                        });
+                    }
                 }
 
             }
@@ -408,7 +410,7 @@ router.get('/getImages', function (ctx, next) {
                     indexNumber--;
                     console.log('下一主页...');
                     getOneIndexPage(indexNumber);
-                },10000);
+                },5000);
             }
 
         });
