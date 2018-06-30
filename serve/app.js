@@ -447,7 +447,7 @@ router.get('/getImages', function (ctx, next) {
             console.log('pageurl____________');
             console.log(url);
             console.log('_________________');
-            let matchData = JSON.stringify(body).match(/https:\/\/images.zhaofulipic.com:8819\/allimg\/\d+\/\w+\.jpg/g);
+            let matchData = JSON.stringify(body).match(/https:\/\/www.images.zhaofulipic.com:8819\/allimg\/\d+\/\w+\.jpg/g);
             //downloadAsyn(matchData, dir);
 
             if(matchData){
