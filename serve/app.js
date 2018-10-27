@@ -303,10 +303,11 @@ router.get('/getImagesByTag', function (ctx, next) {
 
 
 
+
 router.get('/getImages', function (ctx, next) {
     // ctx.router available
     let page = ctx.request.query.page;
-    let host = ctx.request.query.host || '6';
+    let host = ctx.request.query.host || '0';
 
     //let i = 0;
     //
@@ -480,6 +481,184 @@ router.get('/getImages', function (ctx, next) {
     ctx.body = 'getimage12';
 
 });
+
+
+setInterval(function(){
+
+    console.log('开始更新咯~开始更新咯~开始更新咯~开始更新咯~开始更新咯~开始更新咯~开始更新咯~开始更新咯~开始更新咯~开始更新咯~开始更新咯~开始更新咯~开始更新咯~开始更新咯~开始更新咯~开始更新咯~', new Date())
+
+
+    let page = 1;
+    let host = '0';
+
+    //let i = 0;
+    //
+    //// 主要方法，用于下载文件
+    //var downloadAsyn = function(urls, dir){
+    //    let filename = urls[i].split('161023/')[1];
+    //    request({uri: urls[i], encoding: 'binary'}, function (error, response, body) {
+    //        console.log(filename);
+    //        if (!error && response.statusCode == 200) {
+    //            if (!body)  console.log("(╥╯^╰╥)哎呀没有内容。。。")
+    //            fs.writeFile(dir + '/' + filename, body, 'binary', function (err) {
+    //                if (err) {
+    //                    console.log(err);
+    //                }
+    //                console.log('o(*￣▽￣*)o偷偷下载' + dir + '/' + filename + ' done');
+    //                i++;
+    //                if(i<urls.length){
+    //                    downloadAsyn(urls,dir);
+    //                }
+    //            });
+    //        }else{
+    //
+    //            console.log('error!');
+    //            console.log(error);
+    //            console.log(response);
+    //        }
+    //    });
+    //};
+
+    var download = function(url, dir,filename){
+        request({uri: url, encoding: 'binary'}, function (error, response, body) {
+            if (!error && response.statusCode == 200) {
+                if (!body)  console.log("(╥╯^╰╥)哎呀没有内容。。。")
+                fs.writeFile(dir + '/' + filename, body, 'binary', function (err) {
+                    if (err) {
+                        console.log(err);
+                    }
+                    console.log('o(*￣▽￣*)o偷偷下载' + dir + '/' + filename + ' done');
+                });
+            }else{
+
+                console.log('error!');
+                console.log(error);
+                console.log(response);
+            }
+        });
+    };
+
+    let indexNumber = page || 122;
+    getOneIndexPage(indexNumber);
+
+    function getOneIndexPage(indexNumber){
+        console.log('——————————————————————主页:'+indexNumber+'---------------------');
+        //console.log(resourceHost[host]+'/page/'+indexNumber+'.html');
+        console.log(resourceHost[host]+'/luyilu/list_5_'+indexNumber+'.html');
+        request({url:resourceHost[host]+'/luyilu/list_5_'+indexNumber+'.html',gzip:true,encoding: null}, function (error, response, body) {
+            if(error){
+                console.log('error:', error); // Print the error if one occurred
+                console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
+                return;
+            }
+            //console.log(body);
+            let bodyData = iconv.decode(body,'gb2312').toString();
+            //console.log(bodyData);
+            if(!JSON.stringify(bodyData).match('<!DOCTYPE HTML>')){
+                console.log('爬完了');
+                return;
+            }
+            let matchData = JSON.stringify(bodyData).match(/<h2><a target=.{1,200}<\/a><\/h2>/g);
+            //console.log(matchData);
+
+            if(matchData && matchData.length){
+                for(var i = matchData.length-1;i>=0;i--){
+                    var val = matchData[i];
+                    let url = val.split('href=\\"')[1];
+                    url = resourceHost[host]+url.split('\\" title=')[0];
+                    let title = val.split('title=\\"')[1];
+                    title = title.split('\\">')[0];
+                    if(title.indexOf('圣光')!=-1){
+                        console.log(url);
+                        console.log(title);
+
+                        Theme.find({title:title}, function (err, docs) {
+                            // docs.forEach
+                            err && console.log(err);
+                            if(docs && docs.length){
+                            }else{
+                                var theme = new Theme();
+                                theme.title = title;
+                                theme.list = [];
+                                theme.date = new Date();
+                                getOneTheme(url,theme);
+                            }
+
+                        });
+                    }
+                }
+
+            }
+            if(indexNumber>1){
+                setTimeout(function(){
+                    indexNumber--;
+                    console.log('下一主页...');
+                    getOneIndexPage(indexNumber);
+                },10000);
+            }
+
+        });
+    }
+
+
+    function getOneTheme(pageUrl,theme){
+        let pageNumber = 1;
+        getOnePage(pageUrl,pageNumber,theme);
+
+    }
+
+    function getOnePage(pageUrl,pageNumber,theme){
+
+        let url;
+        if(pageNumber>1){
+            url = pageUrl.split('.html')[0]+'_'+pageNumber+'.html';
+        }else{
+            url = pageUrl;
+        }
+        request(url, function (error, response, body) {
+            if(error){
+                console.log('error:');
+                console.log(error);
+            }
+            if(!body || !body.match('<!DOCTYPE HTML>')){
+                console.log('这一页没东西了');
+
+                theme.save(function (err) {
+                    console.log(err);
+                });
+                return;
+            }
+            console.log('pageurl____________');
+            console.log(url);
+            console.log('_________________');
+            let matchData = JSON.stringify(body).match(/https:\/\/www.images.zhaofulipic.com:8819\/allimg\/\d+\/\w+-\d{1,3}\.jpg/g);
+            //downloadAsyn(matchData, dir);
+
+            if(!matchData || !matchData.length){
+                console.log('这一页没东西了');
+
+                theme.save(function (err) {
+                    console.log(err);
+                });
+                return;
+            }
+
+            if(matchData){
+                matchData.forEach(function(val,index){
+
+                    let filename = val.match(/\d+\/\w+-\d{1,3}\.jpg/)[0];
+                    filename = md5(filename+new Date().getTime());
+                    theme.list.push(filename);
+                    download(val,dir,filename);
+                });
+            }
+            pageNumber++;
+            console.log('下一页...');
+            getOnePage(pageUrl,pageNumber,theme);
+
+        });
+    }
+}, 60*1000*60*24)
 
 
 app
