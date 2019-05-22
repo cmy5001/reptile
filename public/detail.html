@@ -39,8 +39,8 @@
 <script>
     window.onload = function(){
         window.template();
-        window.username = localstorage().getItem('username');
-        window.token = localstorage().getItem('token');
+        window.username = localStorage.getItem('username');
+        window.token = localStorage.getItem('token');
         var id = location.href.split('id=')[1];
 
         $.get('/showImages',{id:id, token:token},function(data){

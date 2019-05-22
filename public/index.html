@@ -271,8 +271,8 @@
     window.onload = function(){
         window.template();
         window.popMode = 'login';
-        window.username = localstorage().getItem('username');
-        window.token = localstorage().getItem('token');
+        window.username = localStorage.getItem('username');
+        window.token = localStorage.getItem('token');
         $('.name').html(window.username);
         function getSearch(){
             var search = location.search.split('?')[1];
@@ -348,8 +348,8 @@
                 if(data.msg){
                     alert(data.msg)
                 }
-                localstorage.setItem('token', data.token);
-                localstorage.setItem('username', data.username);
+                localStorage.setItem('token', data.token);
+                localStorage.setItem('username', data.username);
                 location.reload();
             })
         });
