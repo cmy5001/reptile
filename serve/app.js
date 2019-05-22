@@ -29,7 +29,14 @@ var ThemeSchema = new Schema({
     tags      : Array
 });
 
+var UserSchema = new Schema({
+    username     : String,
+    date      : Date,
+    password       : String
+});
+
 var Theme = mongoose.model('Theme', ThemeSchema);
+var User = mongoose.model('User', UserSchema);
 
 // x-response-time
 
@@ -62,6 +69,58 @@ router.get('/', function (ctx, next) {
 //本地存储目录
 var dir = path.join(__dirname + '/../images');
 
+router.get('/register', async function (ctx, next) {
+    let username = ctx.request.query.username;
+    let password = ctx.request.query.password;
+    if(!username || !password) return resolve(-2);
+    let param = {};
+    param.username = username;
+    ctx.body = await new Promise(function(resolve,reject){
+        User.find(param, function (err, docs) {
+
+            if(err){
+                console.log('ERROr');
+                return resolve(-2);
+            }
+            if(!docs || !docs.length){
+                var user = new User();
+                user.username = username;
+                user.password = password;
+                user.date = new Date();
+                user.save(function(err, res){
+                    return resolve(res)
+                })
+            }
+
+        });
+    })
+
+})
+
+router.get('/login', async function (ctx, next) {
+    let username = ctx.request.query.username;
+    let password = ctx.request.query.password;
+    if(!username || !password) return resolve(-2);
+    let param = {};
+    param.username = username;
+    param.password = password;
+    ctx.body = await new Promise(function(resolve,reject){
+        User.find(param, function (err, docs) {
+
+            if(err){
+                console.log('ERROr');
+                return resolve(-2);
+            }
+            if(docs && docs.length){
+                return resolve(docs)
+            }else{
+                return resolve({code:100, msg:'用户名或密码错误'})
+            }
+
+        });
+    })
+
+})
 
 router.get('/delete', async function (ctx, next) {
     let id = ctx.request.query.id;

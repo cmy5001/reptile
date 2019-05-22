@@ -147,6 +147,7 @@
     .user{
         position: absolute;
         right: 0;
+        display: -webkit-box;
     }
     .login-btn,.register-btn{
         height: 50px;
@@ -215,7 +216,7 @@
         color: #999;
         font-size: 30px;
         line-height: 50px;
-        margin: 30px;
+        margin: 0 30px;
     }
 </style>
 <body>
@@ -269,7 +270,7 @@
 <script>
     window.onload = function(){
         window.template();
-
+        window.popMode = 'login';
         function getSearch(){
             var search = location.search.split('?')[1];
             var obj = {};
@@ -333,6 +334,15 @@
             $('.pop').show();
             $('.pop-title').html('登录');
             window.popMode = 'login';
+        });
+
+        $('.pop-btn').click(function(){
+            var username = $('#username').val();
+            var password = $('#password').val();
+            if(!username || !password) return;
+            $.get('/'+window.popMode,{username: username, password: password},function(data){
+                console.log(data);
+            })
         });
 
         $('.prev').click(function(){
