@@ -69,7 +69,7 @@ router.get('/delete', async function (ctx, next) {
     let param = {};
     param._id = id;
     ctx.body = await new Promise(function(resolve,reject){
-        Theme.find(param, function (err, docs) {
+        Theme.remove(param, function (err, docs) {
 
             if(err||!docs||!docs.length){
                 console.log('ERROr');
