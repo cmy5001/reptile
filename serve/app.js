@@ -69,7 +69,7 @@ router.get('/delete', async function (ctx, next) {
     let param = {};
     param._id = id;
     ctx.body = await new Promise(function(resolve,reject){
-        Theme.remove(param, function (err, docs) {
+        Theme.find(param, function (err, docs) {
 
             if(err||!docs||!docs.length){
                 console.log('ERROr');
@@ -86,6 +86,11 @@ router.get('/delete', async function (ctx, next) {
             });
 
 
+            Theme.remove(param, function(err, docs){
+                if(err){
+                    console.log('删除记录失败!!!', docs)
+                }
+            });
             return resolve(docs);
 
         });
