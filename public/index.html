@@ -225,7 +225,7 @@
         <div class="tag-text"></div>
         <div class="search-text"></div>
         <div class="user">
-            <div class="name">张三</div>
+            <div class="name"></div>
             <div class="login-btn">登录</div>
             <div class="register-btn">注册</div>
         </div>
@@ -319,7 +319,11 @@
             if(!window.confirm('确定要删除吗?')) return
             $.get('/delete',{id: id, token: token},function(data){
                 console.log(data);
-                location.reload();
+                if(data.msg){
+                    alert(data.msg)
+                }else{
+                    location.reload();
+                }
             })
         });
 
