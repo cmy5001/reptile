@@ -115,6 +115,9 @@
         margin: 20px 0 20px 50px;
         display: none;
     }
+    .show .del-btn{
+        display: block;
+    }
     .header{
         margin-top: 30px;
         display: -webkit-box;
@@ -273,8 +276,8 @@
         window.template();
         window.popMode = 'login';
         window.username = localStorage.getItem('username');
-        if(window.username == 'cmy5001'){
-            $('.del-btn').show();
+        if(username === 'cmy5001'){
+            $('.container').addClass('show');
         }
         window.token = localStorage.getItem('token');
         $('.name').html(window.username);
