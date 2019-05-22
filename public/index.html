@@ -219,8 +219,10 @@
             console.log($(this).attr('data-id'));
             var id = $(this).attr('data-id');
             if(!id) return
+            if(!window.confirm('确定要删除吗?')) return
             $.get('/delete',{id: id},function(data){
                 console.log(data);
+                location.reload();
             })
         })
 
