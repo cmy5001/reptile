@@ -250,7 +250,7 @@
                 <label for="">用户名:</label> <input type="text" class="input" id="username">
             </div>
             <div>
-                <label for="">密码:</label> <input type="text" class="input" id="password">
+                <label for="">密码:</label> <input type="password" class="input" id="password">
             </div>
             <div class="pop-btn">确定</div>
         </div>
@@ -342,6 +342,9 @@
             if(!username || !password) return;
             $.get('/'+window.popMode,{username: username, password: password},function(data){
                 console.log(data);
+                if(data.msg){
+                    alert(data.msg)
+                }
             })
         });
 

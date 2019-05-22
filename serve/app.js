@@ -90,6 +90,8 @@ router.get('/register', async function (ctx, next) {
                 user.save(function(err, res){
                     return resolve({token: res._id})
                 })
+            }else{
+                return resolve({code:100, msg:'用户已存在'})
             }
 
         });
