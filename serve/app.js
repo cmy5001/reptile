@@ -25,6 +25,7 @@ var ThemeSchema = new Schema({
     title     : String,
     list      : Array,
     date      : Date,
+    url       : String,
     tags      : Array
 });
 
@@ -61,6 +62,32 @@ router.get('/', function (ctx, next) {
 //本地存储目录
 var dir = path.join(__dirname + '/../images');
 
+
+router.get('/delete', async function (ctx, next) {
+    let id = ctx.request.query.id;
+    if(!id) return resolve(-2);
+    param._id = id;
+    Theme.find(param, function (err, docs) {
+
+        if(err||!docs||!docs.length){
+            console.log('ERROr');
+            return resolve(-2);
+        }
+
+        docs[0].list.forEach(function(item, index){
+            fs.unlink(dir+'/'+item,function(err){
+                if (err) {
+                    console.log(err);
+                }
+                console.log('删除' + dir + '/' + item + ' done');
+            })
+        });
+
+
+        return resolve(docs);
+
+    });
+})
 
 
 router.get('/showImages', async function(ctx, next){
@@ -124,184 +151,182 @@ router.get('/showImages', async function(ctx, next){
 
 });
 
-
-router.get('/getImagesByTag', function (ctx, next) {
-    // ctx.router available
-
-    let tags = ['无圣光'];
-    //let tags = ['无圣光','极品萝莉','推女郎','CHOKmoson', '柚木', '土肥圆矮挫穷', '小鸟酱', 'TuiGirl', 'XIUREN', 'Graphis', 'PR社', '露出自拍', '疯狂的爱丽丝', 'VIP', 'SK丝库', '大尺度', '爱丝AISS', '唐兴', 'wanimal', '秀人网', '极品美模', '极品嫩妹', '福利姬', '闫盼盼', '布丁酱', '尤蜜荟', '弱气乙女', '完具少女', '刘钰儿', '丝袜美腿极欲调教', '尤果网', '木奈奈', 'YouMi', '魅妍社', '摄影师', '嗲囡囡', '私拍', '网络红人', 'Tpimage', 'Mistar', '若兮', 'PLAYBOY', 'LegBaby', 'Ugirls', '我是女王', '小果酱', '蜜桃社', '私人玩物', '宋-KiKi', '悦爷妖精', '撸管必备', '夏小秋秋秋', 'Egg-尤妮丝', 'MASKED QUEEN', '王语纯', '假面女皇', '松果儿', '微博红人', '大屌萌妹', 'OWAKADO'];
-    //let tags = ['土肥圆矮挫穷','YouMi'];
-    let host = ctx.request.query.host || '6';
-    let page = ctx.request.query.page || '110';
-
-    var download = function(url, dir,filename){
-        request({uri: url, encoding: 'binary'}, function (error, response, body) {
-            if (!error && response.statusCode == 200) {
-                if (!body)  console.log("(╥╯^╰╥)哎呀没有内容。。。")
-                fs.writeFile(dir + '/' + filename, body, 'binary', function (err) {
-                    if (err) {
-                        console.log(err);
-                    }
-                    console.log('o(*￣▽￣*)o偷偷下载' + dir + '/' + filename + ' done');
-                });
-            }else{
-
-                console.log('error!');
-                console.log(error);
-                console.log(response);
-            }
-        });
-    };
-
-    let tagIndex = 0;
-    let tagPageNumber = page || 110;
-    getOneTag(tags[tagIndex]);
-
-
-
-    function getOneTag(tag){
-
-        console.log('——————————————————————tag:'+tag+'---主页:'+tagPageNumber+'---------------------');
-        //let url = 'http://yxpjwnet3.com/tags.php?/%59%6F%75%4D%69/1/';
-        let url = resourceHost[host]+'/tags.php?/'+urlencode(tag,'gb2312')+'/'+tagPageNumber+'/';
-        console.log(url);
-        request({url:url,gzip:true,encoding: null}, function (error, response, body) {
-            console.log('error:', error); // Print the error if one occurred
-            if(error){
-                setTimeout(function(){
-                    if(tags[tagIndex+1]){
-                        tagIndex++;
-                        tagPageNumber = 110;
-                        console.log('下一tag...');
-                        getOneTag(tags[tagIndex]);
-                    }else{
-                        console.log('完结——————————————');
-                    }
-                },10000);
-                return;
-            }
-            //console.log(body);
-            let bodyData = iconv.decode(body,'gb2312').toString();
-            //console.log(bodyData);
-            if(!JSON.stringify(bodyData).match('<!DOCTYPE HTML>')){
-                console.log('爬完了');
-                return;
-            }
-            if(tagPageNumber<1){
-                console.log('爬完了');
-                return;
-            }
-            let matchData = JSON.stringify(bodyData).match(/<h2><a target=.{1,200}<\/a><\/h2>/g);
-            //console.log(matchData);
-
-            if(matchData && matchData.length){
-                for(var i = 0;i<matchData.length;i++){
-                    var val = matchData[i];
-                    let url = val.split('href=\\"')[1];
-                    url = resourceHost[host]+url.split('\\" title=')[0];
-                    let title = val.split('title=\\"')[1];
-                    title = title.split('\\">')[0];
-                    console.log(url);
-                    console.log(title);
-
-                    Theme.find({title:title}, function (err, docs) {
-                        // docs.forEach
-                        err && console.log(err);
-                        if(docs && docs.length){
-                            if(!docs[0].tags){
-                                docs[0].tags = [];
-                            }
-                            if(docs[0].tags.indexOf(tag) == -1){
-                                docs[0].tags.push(tag);
-                                docs[0].save(function(err){});
-                            }
-                        }else{
-                            var theme = new Theme();
-                            theme.title = title;
-                            theme.list = [];
-                            theme.date = new Date();
-                            theme.tags = [tag];
-                            getOneTheme(url,theme);
-                        }
-
-                    });
-                }
-
-                setTimeout(function(){
-                    tagPageNumber--;
-                    console.log('下一tagPage...');
-                    getOneTag(tag);
-                },10000);
-
-            }else{
-                setTimeout(function(){
-                    if(tags[tagIndex+1]){
-                        tagIndex++;
-                        tagPageNumber = 110;
-                        console.log('下一tag...');
-                        getOneTag(tags[tagIndex]);
-                    }
-                },10000);
-            }
-
-        });
-    }
-
-
-    //getOneTheme('http://yxpjwnet3.com/luyilu/2016/1023/2532.html');
-
-    function getOneTheme(pageUrl,theme){
-        let pageNumber = 1;
-        getOnePage(pageUrl,pageNumber,theme);
-
-    }
-
-    function getOnePage(pageUrl,pageNumber,theme){
-
-        let url;
-        if(pageNumber>1){
-            url = pageUrl.split('.html')[0]+'_'+pageNumber+'.html';
-        }else{
-            url = pageUrl;
-        }
-        console.log('pageurl____________');
-        console.log(url);
-        console.log('_________________');
-        request(url, function (error, response, body) {
-            if(!body || !body.match('<!DOCTYPE HTML>')){
-                console.log('这一页没东西了');
-
-                theme.save(function (err) {
-                    console.log(err);
-                });
-                return;
-            }
-            let matchData = JSON.stringify(body).match(/http:\/\/images.zhaofulipic.com:8818\/allimg\/\d+\/\w+-\d{1,3}\.jpg/g);
-            //downloadAsyn(matchData, dir);
-
-            if(matchData){
-                matchData.forEach(function(val,index){
-
-                    let filename = val.match(/\w+-\d+\.jpg/)[0];
-                    filename = md5(filename+new Date().getTime());
-                    theme.list.push(filename);
-                    download(val,dir,filename);
-                });
-            }
-            pageNumber++;
-            console.log('下一页...');
-            getOnePage(pageUrl,pageNumber,theme);
-
-        });
-    }
-
-
-    ctx.body = 'getimageByTag';
-
-});
-
-
-
+//
+//router.get('/getImagesByTag', function (ctx, next) {
+//    // ctx.router available
+//
+//    let tags = ['无圣光'];
+//    //let tags = ['无圣光','极品萝莉','推女郎','CHOKmoson', '柚木', '土肥圆矮挫穷', '小鸟酱', 'TuiGirl', 'XIUREN', 'Graphis', 'PR社', '露出自拍', '疯狂的爱丽丝', 'VIP', 'SK丝库', '大尺度', '爱丝AISS', '唐兴', 'wanimal', '秀人网', '极品美模', '极品嫩妹', '福利姬', '闫盼盼', '布丁酱', '尤蜜荟', '弱气乙女', '完具少女', '刘钰儿', '丝袜美腿极欲调教', '尤果网', '木奈奈', 'YouMi', '魅妍社', '摄影师', '嗲囡囡', '私拍', '网络红人', 'Tpimage', 'Mistar', '若兮', 'PLAYBOY', 'LegBaby', 'Ugirls', '我是女王', '小果酱', '蜜桃社', '私人玩物', '宋-KiKi', '悦爷妖精', '撸管必备', '夏小秋秋秋', 'Egg-尤妮丝', 'MASKED QUEEN', '王语纯', '假面女皇', '松果儿', '微博红人', '大屌萌妹', 'OWAKADO'];
+//    //let tags = ['土肥圆矮挫穷','YouMi'];
+//    let host = ctx.request.query.host || '6';
+//    let page = ctx.request.query.page || '110';
+//
+//    var download = function(url, dir,filename){
+//        request({uri: url, encoding: 'binary'}, function (error, response, body) {
+//            if (!error && response.statusCode == 200) {
+//                if (!body)  console.log("(╥╯^╰╥)哎呀没有内容。。。")
+//                fs.writeFile(dir + '/' + filename, body, 'binary', function (err) {
+//                    if (err) {
+//                        console.log(err);
+//                    }
+//                    console.log('o(*￣▽￣*)o偷偷下载' + dir + '/' + filename + ' done');
+//                });
+//            }else{
+//
+//                console.log('error!');
+//                console.log(error);
+//                console.log(response);
+//            }
+//        });
+//    };
+//
+//    let tagIndex = 0;
+//    let tagPageNumber = page || 110;
+//    getOneTag(tags[tagIndex]);
+//
+//
+//
+//    function getOneTag(tag){
+//
+//        console.log('——————————————————————tag:'+tag+'---主页:'+tagPageNumber+'---------------------');
+//        //let url = 'http://yxpjwnet3.com/tags.php?/%59%6F%75%4D%69/1/';
+//        let url = resourceHost[host]+'/tags.php?/'+urlencode(tag,'gb2312')+'/'+tagPageNumber+'/';
+//        console.log(url);
+//        request({url:url,gzip:true,encoding: null}, function (error, response, body) {
+//            console.log('error:', error); // Print the error if one occurred
+//            if(error){
+//                setTimeout(function(){
+//                    if(tags[tagIndex+1]){
+//                        tagIndex++;
+//                        tagPageNumber = 110;
+//                        console.log('下一tag...');
+//                        getOneTag(tags[tagIndex]);
+//                    }else{
+//                        console.log('完结——————————————');
+//                    }
+//                },10000);
+//                return;
+//            }
+//            //console.log(body);
+//            let bodyData = iconv.decode(body,'gb2312').toString();
+//            //console.log(bodyData);
+//            if(!JSON.stringify(bodyData).match('<!DOCTYPE HTML>')){
+//                console.log('爬完了');
+//                return;
+//            }
+//            if(tagPageNumber<1){
+//                console.log('爬完了');
+//                return;
+//            }
+//            let matchData = JSON.stringify(bodyData).match(/<h2><a target=.{1,200}<\/a><\/h2>/g);
+//            //console.log(matchData);
+//
+//            if(matchData && matchData.length){
+//                for(var i = 0;i<matchData.length;i++){
+//                    var val = matchData[i];
+//                    let url = val.split('href=\\"')[1];
+//                    url = resourceHost[host]+url.split('\\" title=')[0];
+//                    let title = val.split('title=\\"')[1];
+//                    title = title.split('\\">')[0];
+//                    console.log(url);
+//                    console.log(title);
+//
+//                    Theme.find({title:title}, function (err, docs) {
+//                        // docs.forEach
+//                        err && console.log(err);
+//                        if(docs && docs.length){
+//                            if(!docs[0].tags){
+//                                docs[0].tags = [];
+//                            }
+//                            if(docs[0].tags.indexOf(tag) == -1){
+//                                docs[0].tags.push(tag);
+//                                docs[0].save(function(err){});
+//                            }
+//                        }else{
+//                            var theme = new Theme();
+//                            theme.title = title;
+//                            theme.list = [];
+//                            theme.date = new Date();
+//                            theme.tags = [tag];
+//                            getOneTheme(url,theme);
+//                        }
+//
+//                    });
+//                }
+//
+//                setTimeout(function(){
+//                    tagPageNumber--;
+//                    console.log('下一tagPage...');
+//                    getOneTag(tag);
+//                },10000);
+//
+//            }else{
+//                setTimeout(function(){
+//                    if(tags[tagIndex+1]){
+//                        tagIndex++;
+//                        tagPageNumber = 110;
+//                        console.log('下一tag...');
+//                        getOneTag(tags[tagIndex]);
+//                    }
+//                },10000);
+//            }
+//
+//        });
+//    }
+//
+//
+//    //getOneTheme('http://yxpjwnet3.com/luyilu/2016/1023/2532.html');
+//
+//    function getOneTheme(pageUrl,theme){
+//        let pageNumber = 1;
+//        getOnePage(pageUrl,pageNumber,theme);
+//
+//    }
+//
+//    function getOnePage(pageUrl,pageNumber,theme){
+//
+//        let url;
+//        if(pageNumber>1){
+//            url = pageUrl.split('.html')[0]+'_'+pageNumber+'.html';
+//        }else{
+//            url = pageUrl;
+//        }
+//        console.log('pageurl____________');
+//        console.log(url);
+//        console.log('_________________');
+//        request(url, function (error, response, body) {
+//            if(!body || !body.match('<!DOCTYPE HTML>')){
+//                console.log('这一页没东西了');
+//
+//                theme.save(function (err) {
+//                    console.log(err);
+//                });
+//                return;
+//            }
+//            let matchData = JSON.stringify(body).match(/http:\/\/images.zhaofulipic.com:8818\/allimg\/\d+\/\w+-\d{1,3}\.jpg/g);
+//            //downloadAsyn(matchData, dir);
+//
+//            if(matchData){
+//                matchData.forEach(function(val,index){
+//
+//                    let filename = val.match(/\w+-\d+\.jpg/)[0];
+//                    filename = md5(filename+new Date().getTime());
+//                    theme.list.push(filename);
+//                    download(val,dir,filename);
+//                });
+//            }
+//            pageNumber++;
+//            console.log('下一页...');
+//            getOnePage(pageUrl,pageNumber,theme);
+//
+//        });
+//    }
+//
+//
+//    ctx.body = 'getimageByTag';
+//
+//});
+//
 
 
 router.get('/getImages', function (ctx, next) {
@@ -580,6 +605,7 @@ setInterval(function(){
                                 var theme = new Theme();
                                 theme.title = title;
                                 theme.list = [];
+                                theme.url = url;
                                 theme.date = new Date();
                                 getOneTheme(url,theme);
                             }

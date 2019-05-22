@@ -14,8 +14,17 @@
         width: 100%;
         margin: 20px 0;
     }
+    .title{
+        text-align: center;
+        width: 100%;
+        font-size: 30px;
+        color: lightseagreen;
+        height: 100px;
+        line-height: 100px;
+    }
 </style>
 <body>
+<div class="title"></div>
 <div class="container">
 </div>
 </body>
@@ -34,6 +43,7 @@
 
         $.get('/showImages?id='+id,function(data){
             console.log(data);
+            $('.title').html(data[0].title)
             var tpl = document.getElementById('tpl').innerHTML;
             var html = template(tpl, data[0]);
             $('.container').html(html);

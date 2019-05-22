@@ -6,10 +6,14 @@
 </head>
 <style>
     .container,.btn-container{
-        width: 800px;
+        width: 900px;
         margin: 50px auto;
     }
+    .item-container{
+        display: -webkit-box;
+    }
     .item{
+        flex: 1;
         font-size: 25px;
         color: white;
         background-color: #bbb;
@@ -96,6 +100,18 @@
         background-color: lightseagreen;
         cursor: pointer;
     }
+    .del-btn{
+        height: 50px;
+        line-height: 50px;
+        width: 100px;
+        font-size: 25px;
+        text-align: center;
+        color: white;
+        border-radius: 10px;
+        background-color: lightseagreen;
+        cursor: pointer;
+        margin-left: 50px;
+    }
     .header{
         margin-top: 30px;
         display: -webkit-box;
@@ -149,7 +165,10 @@
 <script id="tpl" type="text/html">
 
     <%for(var i = 0; i < list.length; i++) {%>
+    <div class="item-container">
         <a class="item" href="./detail.html?id=<%:=list[i]._id%>"><%:=list[i].title%></a>
+        <div class="del-btn" data-id="<%:=list[i]._id%>">删除</div>
+    </div>
     <%}%>
 </script>
 <script src="./assets/jquery.js"></script>
@@ -195,6 +214,15 @@
                 $('.container').html(html);
             })
         }
+
+        $(document).on('click','.del-btn',function(){
+            console.log($(this).attr('data-id'));
+            var id = $(this).attr('data-id');
+            if(!id) return
+            $.get('/delet',{id: id},function(data){
+                console.log(data);
+            })
+        })
 
 
         $('.prev').click(function(){
