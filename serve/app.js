@@ -341,7 +341,7 @@ router.get('/showImages', async function(ctx, next){
 router.get('/getImages', function (ctx, next) {
     // ctx.router available
     let page = ctx.request.query.page;
-    let host = ctx.request.query.host || '1';
+    let host = ctx.request.query.host || '5';
 
     //let i = 0;
     //
@@ -525,7 +525,7 @@ setInterval(function(){
 
 
     let page = 1;
-    let host = '1';
+    let host = '5';
 
     //let i = 0;
     //
@@ -652,12 +652,13 @@ setInterval(function(){
         }else{
             url = pageUrl;
         }
-        request(url, function (error, response, body) {
+        request({url:url,gzip:true,encoding: null}, function (error, response, body) {
             if(error){
                 console.log('error:');
                 console.log(error);
             }
-            if(!body || !body.match('<!DOCTYPE HTML>')){
+            let bodyData = iconv.decode(body,'gb2312').toString();
+            if(!JSON.stringify(bodyData) || !JSON.stringify(bodyData).match('<!DOCTYPE HTML>')){
                 console.log('这一页没东西了 no body');
 
                 theme.save(function (err) {
