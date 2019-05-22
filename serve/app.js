@@ -68,26 +68,29 @@ router.get('/delete', async function (ctx, next) {
     if(!id) return resolve(-2);
     let param = {};
     param._id = id;
-    Theme.find(param, function (err, docs) {
+    ctx.body = await new Promise(function(resolve,reject){
+        Theme.find(param, function (err, docs) {
 
-        if(err||!docs||!docs.length){
-            console.log('ERROr');
-            return resolve(-2);
-        }
+            if(err||!docs||!docs.length){
+                console.log('ERROr');
+                return resolve(-2);
+            }
 
-        docs[0].list.forEach(function(item, index){
-            fs.unlink(dir+'/'+item,function(err){
-                if (err) {
-                    console.log(err);
-                }
-                console.log('删除' + dir + '/' + item + ' done');
-            })
+            docs[0].list.forEach(function(item, index){
+                fs.unlink(dir+'/'+item,function(err){
+                    if (err) {
+                        console.log(err);
+                    }
+                    console.log('删除' + dir + '/' + item + ' done');
+                })
+            });
+
+
+            return resolve(docs);
+
         });
+    })
 
-
-        return resolve(docs);
-
-    });
 })
 
 
