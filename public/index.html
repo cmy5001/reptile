@@ -166,6 +166,21 @@
         width: 800px;
         margin: 200px auto 0;
         background: white;
+        display: -webkit-box;
+        -webkit-box-align: center;
+        -webkit-box-pack: center;
+        -webkit-box-orient: vertical;
+    }
+    .pop-container label{
+        color: #999;
+        font-size: 30px;
+        line-height: 50px;
+    }
+    .pop-title{
+        color: lightseagreen;
+        font-size: 40px;
+        line-height: 50px;
+        margin: 0 50px;
     }
 </style>
 <body>
@@ -194,8 +209,8 @@
     <div class="shadow">
         <div class="pop-container">
             <div class="pop-title">注册</div>
-            <input type="text" class="input" id="username">
-            <input type="text" class="input" id="password">
+            <label for="">用户名:</label> <input type="text" class="input" id="username">
+            <label for="">密码:</label> <input type="text" class="input" id="password">
             <div class="pop-btn">确定</div>
         </div>
     </div>
