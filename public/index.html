@@ -13,7 +13,7 @@
         display: -webkit-box;
     }
     .item{
-        flex: 1;
+        -webkit-box-flex: 1;
         font-size: 25px;
         color: white;
         background-color: #bbb;
@@ -110,7 +110,7 @@
         border-radius: 10px;
         background-color: lightseagreen;
         cursor: pointer;
-        margin-left: 50px;
+        margin: 20px 0 20px 50px;
     }
     .header{
         margin-top: 30px;
@@ -219,7 +219,7 @@
             console.log($(this).attr('data-id'));
             var id = $(this).attr('data-id');
             if(!id) return
-            $.get('/delet',{id: id},function(data){
+            $.get('/delete',{id: id},function(data){
                 console.log(data);
             })
         })
