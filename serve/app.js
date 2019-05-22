@@ -88,7 +88,7 @@ router.get('/register', async function (ctx, next) {
                 user.password = password;
                 user.date = new Date();
                 user.save(function(err, res){
-                    return resolve(res)
+                    return resolve({token: res._id})
                 })
             }
 
@@ -112,7 +112,7 @@ router.get('/login', async function (ctx, next) {
                 return resolve(-2);
             }
             if(docs && docs.length){
-                return resolve(docs)
+                return resolve({username:username, token: docs[0]._id})
             }else{
                 return resolve({code:100, msg:'用户名或密码错误'})
             }
