@@ -656,7 +656,7 @@ setInterval(function(){
                 console.log(error);
             }
             if(!body || !body.match('<!DOCTYPE HTML>')){
-                console.log('这一页没东西了');
+                console.log('这一页没东西了 no body');
 
                 theme.save(function (err) {
                     console.log(err);
@@ -670,7 +670,7 @@ setInterval(function(){
             //downloadAsyn(matchData, dir);
 
             if(!matchData || !matchData.length){
-                console.log('这一页没东西了');
+                console.log('这一页没东西了 no image');
 
                 theme.save(function (err) {
                     console.log(err);
