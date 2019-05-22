@@ -468,13 +468,13 @@ router.get('/getImages', function (ctx, next) {
             url = pageUrl;
         }
 
-        request(url, function (error, response, body) {
+        request({url:url,gzip:true,encoding: null},, function (error, response, body) {
             if(error){
                 console.log('error:');
                 console.log(error);
             }
             let bodyData = iconv.decode(body,'gb2312').toString();
-            if(!bodyData || !bodyData.match('<!DOCTYPE HTML>')){
+            if(!JSON.stringify(bodyData) || !JSON.stringify(bodyData).match('<!DOCTYPE HTML>')){
                 console.log('这一页没东西了 no body');
 
                 theme.save(function (err) {
