@@ -110,9 +110,10 @@
         text-align: center;
         color: white;
         border-radius: 10px;
-        background-color: lightseagreen;
+        background-color: lightcoral;
         cursor: pointer;
         margin: 20px 0 20px 50px;
+        display: none;
     }
     .header{
         margin-top: 30px;
@@ -272,6 +273,9 @@
         window.template();
         window.popMode = 'login';
         window.username = localStorage.getItem('username');
+        if(username === 'cmy5001'){
+            $('.del-btn').show();
+        }
         window.token = localStorage.getItem('token');
         $('.name').html(window.username);
         function getSearch(){
