@@ -348,8 +348,8 @@
                 if(data.msg){
                     alert(data.msg)
                 }
-                localStorage.setItem('token', data.token);
-                localStorage.setItem('username', data.username);
+                localStorage.setItem('token', data.token || '');
+                localStorage.setItem('username', data.username || '');
                 location.reload();
             })
         });
