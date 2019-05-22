@@ -271,6 +271,9 @@
     window.onload = function(){
         window.template();
         window.popMode = 'login';
+        window.username = localstorage().getItem('username');
+        window.token = localstorage().getItem('token');
+        $('.name').html(window.username);
         function getSearch(){
             var search = location.search.split('?')[1];
             var obj = {};
@@ -302,7 +305,7 @@
         getList();
         function getList(){
 
-            $.get('/showImages',{page:page,tag:tag,title:title},function(data){
+            $.get('/showImages',{page:page,tag:tag,title:title,token:token},function(data){
                 var tpl = document.getElementById('tpl').innerHTML;
                 var html = template(tpl, {list: data});
                 $('.container').html(html);
@@ -314,7 +317,7 @@
             var id = $(this).attr('data-id');
             if(!id) return
             if(!window.confirm('确定要删除吗?')) return
-            $.get('/delete',{id: id},function(data){
+            $.get('/delete',{id: id, token: token},function(data){
                 console.log(data);
                 location.reload();
             })
@@ -345,6 +348,9 @@
                 if(data.msg){
                     alert(data.msg)
                 }
+                localstorage.setItem('token', data.token);
+                localstorage.setItem('username', data.username);
+                location.reload();
             })
         });
 

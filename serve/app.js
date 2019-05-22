@@ -88,7 +88,7 @@ router.get('/register', async function (ctx, next) {
                 user.password = password;
                 user.date = new Date();
                 user.save(function(err, res){
-                    return resolve({token: res._id})
+                    return resolve({username: username, token: res._id})
                 })
             }else{
                 return resolve({code:100, msg:'用户已存在'})
@@ -126,35 +126,46 @@ router.get('/login', async function (ctx, next) {
 
 router.get('/delete', async function (ctx, next) {
     let id = ctx.request.query.id;
-    if(!id) return resolve(-2);
+    let token = ctx.request.query.token;
+    if(!id || !token) return resolve({code:100, msg:'未获取到用户信息'});
+
     let param = {};
     param._id = id;
     ctx.body = await new Promise(function(resolve,reject){
-        Theme.find(param, function (err, docs) {
-
-            if(err||!docs||!docs.length){
-                console.log('ERROr');
-                return resolve(-2);
+        User.find({_id: token}, function(e,d){
+            if(e || !d ||!d.length){
+                return resolve({code:100, msg: '未获取到用户信息'})
             }
+            if(d[0].username != 'cmy5001'){
+                return resolve({code:100, msg: '没有权限哦'})
+            }
+            Theme.find(param, function (err, docs) {
 
-            docs[0].list.forEach(function(item, index){
-                fs.unlink(dir+'/'+item,function(err){
-                    if (err) {
-                        console.log(err);
-                    }
-                    console.log('删除' + dir + '/' + item + ' done');
-                })
-            });
-
-
-            Theme.remove(param, function(err, docs){
-                if(err){
-                    console.log('删除记录失败!!!', docs)
+                if(err||!docs||!docs.length){
+                    console.log('ERROr');
+                    return resolve(-2);
                 }
-            });
-            return resolve(docs);
 
-        });
+                docs[0].list.forEach(function(item, index){
+                    fs.unlink(dir+'/'+item,function(err){
+                        if (err) {
+                            console.log(err);
+                        }
+                        console.log('删除' + dir + '/' + item + ' done');
+                    })
+                });
+
+
+                Theme.remove(param, function(err, docs){
+                    if(err){
+                        console.log('删除记录失败!!!', docs)
+                    }
+                });
+                return resolve(docs);
+
+            });
+        })
+
     })
 
 })
@@ -165,9 +176,14 @@ router.get('/showImages', async function(ctx, next){
     let page = ctx.request.query.page;
     let tag = ctx.request.query.tag;
     let title = ctx.request.query.title;
+    let token = ctx.request.query.token;
     let pageSize = 10;
 
     ctx.body = await new Promise(function(resolve,reject){
+        User.find({_id: token}, function(e,d){
+            if(e || !d ||!d.length){
+                return resolve({code:100, msg: '未获取到用户信息'})
+            }
             let param = {};
             if(tag){
                 let skip = pageSize*(page-1);
@@ -216,8 +232,9 @@ router.get('/showImages', async function(ctx, next){
                     return resolve(docs);
                 });
             }
-
         })
+        
+    })
 
 });
 
