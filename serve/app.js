@@ -66,7 +66,7 @@ var dir = path.join(__dirname + '/../images');
 router.get('/delete', async function (ctx, next) {
     let id = ctx.request.query.id;
     if(!id) return resolve(-2);
-    let param;
+    let param = {};
     param._id = id;
     Theme.find(param, function (err, docs) {
 
