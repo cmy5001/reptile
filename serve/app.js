@@ -467,13 +467,14 @@ router.get('/getImages', function (ctx, next) {
         }else{
             url = pageUrl;
         }
+
         request(url, function (error, response, body) {
             if(error){
                 console.log('error:');
                 console.log(error);
             }
-            console.log(body);
-            if(!body || !body.match('<!DOCTYPE HTML>')){
+            let bodyData = iconv.decode(body,'gb2312').toString();
+            if(!bodyData || !bodyData.match('<!DOCTYPE HTML>')){
                 console.log('这一页没东西了 no body');
 
                 theme.save(function (err) {
@@ -484,7 +485,7 @@ router.get('/getImages', function (ctx, next) {
             console.log('pageurl____________');
             console.log(url);
             console.log('_________________');
-            let matchData = JSON.stringify(body).match(/https:\/\/www.images.zhaofulipic.com:8819\/allimg\/\d+\/\w+-\d{1,3}\.jpg/g);
+            let matchData = JSON.stringify(bodyData).match(/https:\/\/www.images.zhaofulipic.com:8819\/allimg\/\d+\/\w+-\d{1,3}\.jpg/g);
             //downloadAsyn(matchData, dir);
 
             if(!matchData || !matchData.length){
