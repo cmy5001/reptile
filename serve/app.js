@@ -472,6 +472,7 @@ router.get('/getImages', function (ctx, next) {
                 console.log('error:');
                 console.log(error);
             }
+            console.log(body);
             if(!body || !body.match('<!DOCTYPE HTML>')){
                 console.log('这一页没东西了 no body');
 
