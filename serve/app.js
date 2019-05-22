@@ -468,7 +468,7 @@ router.get('/getImages', function (ctx, next) {
             url = pageUrl;
         }
 
-        request({url:url,gzip:true,encoding: null},, function (error, response, body) {
+        request({url:url,gzip:true,encoding: null}, function (error, response, body) {
             if(error){
                 console.log('error:');
                 console.log(error);
