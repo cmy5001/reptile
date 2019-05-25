@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="9f75a1cf-49e9-46a3-8126-77e1a124cc8f" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/serve/app.js" afterPath="$PROJECT_DIR$/serve/app.js" />
     </list>
     <ignored path="reptile.iws" />
@@ -27,8 +26,8 @@
       <file leaf-file-name="app.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/serve/app.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="2.9492753">
-              <caret line="749" column="51" selection-start-line="749" selection-start-column="51" selection-end-line="749" selection-end-column="51" />
+            <state vertical-scroll-proportion="0.34692028">
+              <caret line="732" column="86" selection-start-line="732" selection-start-column="86" selection-end-line="732" selection-end-column="86" />
               <folding />
             </state>
           </provider>
@@ -363,7 +362,7 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <option name="time" value="1" />
+      <option name="time" value="2" />
     </breakpoint-manager>
     <watches-manager />
   </component>
@@ -770,8 +769,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/serve/app.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="2.9492753">
-          <caret line="749" column="51" selection-start-line="749" selection-start-column="51" selection-end-line="749" selection-end-column="51" />
+        <state vertical-scroll-proportion="0.34692028">
+          <caret line="732" column="86" selection-start-line="732" selection-start-column="86" selection-end-line="732" selection-end-column="86" />
           <folding />
         </state>
       </provider>

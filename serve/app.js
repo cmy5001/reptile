@@ -767,7 +767,7 @@ setInterval(function(){
                     theme.list.push(filename);
                     download(val,dir,filename);
                 });
-            }}
+            }
             pageNumber++;
             console.log('下一页...');
             getOnePage(pageUrl,pageNumber,theme);
