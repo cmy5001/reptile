@@ -747,7 +747,7 @@ setInterval(function(){
             console.log('pageurl____________');
             console.log(url);
             console.log('_________________');
-            let matchData = JSON.stringify(body).match(/https:\/\/www.images.zhaofulipic.com:8819\/allimg\/\d+\/\w+-\d{1,3}\.jpg/g);
+            let matchData = JSON.stringify(bodyData).match(/https:\/\/www.images.zhaofulipic.com:8819\/allimg\/\d+\/\w+-\d{1,3}\.jpg/g);
             //downloadAsyn(matchData, dir);
 
             if(!matchData || !matchData.length){
@@ -767,7 +767,7 @@ setInterval(function(){
                     theme.list.push(filename);
                     download(val,dir,filename);
                 });
-            }
+            }}
             pageNumber++;
             console.log('下一页...');
             getOnePage(pageUrl,pageNumber,theme);
