@@ -42,6 +42,7 @@ var User = mongoose.model('User', UserSchema);
 
 app.use(async (ctx, next) => {
     const start = Date.now();
+    console.log(`${ctx.method} ${ctx.url} - start!!!!!!`);
     await next();
     const ms = Date.now() - start;
     ctx.set('X-Response-Time', `${ms}ms`);
