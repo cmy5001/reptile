@@ -16,7 +16,7 @@ var urlencode = require('urlencode2');
 const router = new Router();
 mongoose.connect('mongodb://localhost:27017/zfl');
 
-const resourceHost = ['http://yxpjwnet.com','https://961.one','http://yxpjwnet2.com','http://yxpjwnet3.com','http://fuli010.com','https://52zfl.com','https://652ll.com'];
+const resourceHost = ['http://yxpjwnet.com','https://961.one','http://yxpjwnet2.com','http://yxpjwnet3.com','http://fuli010.com','https://52zfl.com','https://652ll.com','https://ucr775.com'];
 
 
 var Schema = mongoose.Schema;
@@ -420,7 +420,7 @@ router.get('/showImages', async function(ctx, next){
 router.get('/getImages', function (ctx, next) {
     // ctx.router available
     let page = ctx.request.query.page;
-    let host = ctx.request.query.host || '5';
+    let host = ctx.request.query.host || '7';
 
     //let i = 0;
     //
@@ -604,7 +604,7 @@ setInterval(function(){
 
 
     let page = 1;
-    let host = '5';
+    let host = '7';
 
     //let i = 0;
     //
