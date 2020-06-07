@@ -16,7 +16,7 @@ var urlencode = require('urlencode2');
 const router = new Router();
 mongoose.connect('mongodb://localhost:27017/zfl');
 
-const resourceHost = ['http://yxpjwnet.com','https://961.one','http://yxpjwnet2.com','http://yxpjwnet3.com','http://fuli010.com','https://52zfl.com','https://652ll.com','https://ucr775.com'];
+const resourceHost = ['http://yxpjwnet.com','https://961.one','http://yxpjwnet2.com','http://yxpjwnet3.com','http://fuli010.com','https://52zfl.com','https://652ll.com','https://qqr522.com','https://ucr775.com'];
 
 
 var Schema = mongoose.Schema;
