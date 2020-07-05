@@ -13,6 +13,8 @@ const mongoose = require('mongoose');
 const serve = require('koa-static');
 var urlencode = require('urlencode2');
 
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
+
 const router = new Router();
 mongoose.connect('mongodb://localhost:27017/zfl');
 
@@ -451,7 +453,8 @@ router.get('/getImages', function (ctx, next) {
     //};
 
     var download = function(url, dir,filename){
-        request({uri: url, encoding: 'binary'}, function (error, response, body) {
+        request({uri: url, encoding: 'binary',strictSSL: false, // allow us to use our self-signed cert for testing
+            rejectUnauthorized: false}, function (error, response, body) {
             if (!error && response.statusCode == 200) {
                 if (!body)  console.log("(╥╯^╰╥)哎呀没有内容。。。")
                 fs.writeFile(dir + '/' + filename, body, 'binary', function (err) {
