@@ -34,7 +34,8 @@ var ThemeSchema = new Schema({
 var UserSchema = new Schema({
     username     : String,
     date      : Date,
-    password       : String
+    password       : String,
+    like : Array
 });
 
 var Theme = mongoose.model('Theme', ThemeSchema);
@@ -127,6 +128,91 @@ router.get('/login', async function (ctx, next) {
 
 })
 
+router.get('/like', async function (ctx, next) {
+    let id = ctx.request.query.id;
+    let token = ctx.request.query.token;
+    if(!id || !token) return resolve({code:100, msg:'未获取到用户信息'});
+
+    let param = {};
+    param._id = id;
+    ctx.body = await new Promise(function(resolve,reject){
+        User.findById(token, function(e,user){
+            if(e || !user ){
+                return resolve({code:100, msg: '未获取到用户信息'})
+            }
+            let repeat = false;
+            if(user.like && user.like.length){
+                user.like.forEach(function(item, index){
+                    if(item._id == id){
+                        repeat = true;
+                    }
+                });
+            }
+
+            if(!repeat){
+                Theme.findById(id, function (err, docs) {
+
+                    if(err||!docs){
+                        console.log('ERROr');
+                        return resolve(-2);
+                    }
+
+                    user.like.push(docs);
+                    user.save(function (err, doc) {
+                        if(err){
+                            console.log('添加失败!!!', doc)
+                            return resolve(-2)
+                        }
+                        return resolve(docs);
+                    });
+
+                });
+            }else{
+                return resolve({code:500,msg:'已存在'})
+            }
+
+        })
+
+    })
+
+})
+
+router.get('/dislike', async function (ctx, next) {
+    let id = ctx.request.query.id;
+    let token = ctx.request.query.token;
+    if(!id || !token) return resolve({code:100, msg:'未获取到用户信息'});
+
+    let param = {};
+    param._id = id;
+    ctx.body = await new Promise(function(resolve,reject){
+        User.findById(token, function(e,user){
+            if(e || !user ){
+                return resolve({code:100, msg: '未获取到用户信息'})
+            }
+            if(user.like && user.like.length){
+                user.like.forEach(function(item, index){
+                    if(item._id == id){
+                        user.like.splice(index,1);
+                        user.save(function (err, doc) {
+                            if(err){
+                                console.log('移除失败!!!', doc)
+                                return resolve(-2)
+                            }
+                            return resolve(docs);
+                        });
+                    }
+                });
+
+            }else{
+                return resolve(-2)
+            }
+
+        })
+
+    })
+
+})
+
 router.get('/delete', async function (ctx, next) {
     let id = ctx.request.query.id;
     let token = ctx.request.query.token;
@@ -180,12 +266,16 @@ router.get('/showImages', async function(ctx, next){
     let tag = ctx.request.query.tag;
     let title = ctx.request.query.title;
     let token = ctx.request.query.token;
+    let like = ctx.request.query.like;
     let pageSize = 10;
 
     ctx.body = await new Promise(function(resolve,reject){
         User.find({_id: token}, function(e,d){
             if(e || !d ||!d.length){
                 return resolve({code:100, msg: '未获取到用户信息'})
+            }
+            if(like){
+                return resolve(d[0].like || []);
             }
             let param = {};
             if(tag){
