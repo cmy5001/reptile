@@ -198,7 +198,7 @@ router.get('/dislike', async function (ctx, next) {
                                 console.log('移除失败!!!', doc)
                                 return resolve(-2)
                             }
-                            return resolve(docs);
+                            return resolve(doc);
                         });
                     }
                 });
