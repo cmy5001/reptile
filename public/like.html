@@ -267,7 +267,6 @@
 </style>
 <body>
 <div class="header">
-    <div class="page-text"></div>
     <div class="tag-text"></div>
     <div class="search-text"></div>
     <div class="action">
@@ -325,9 +324,6 @@
         var tag = searchObj.tag || '';
         var title = searchObj.title || '';
 
-        if(page){
-            $('.page-text').text(page);
-        }
         if(tag){
             $('.tag-text').text(decodeURIComponent(tag)).show();
         }

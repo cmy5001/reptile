@@ -168,7 +168,7 @@ router.get('/like', async function (ctx, next) {
 
                 });
             }else{
-                return resolve({code:500,msg:'已存在'})
+                return resolve({code:500,msg:'已存在了哦'})
             }
 
         })
