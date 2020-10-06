@@ -156,8 +156,11 @@ router.get('/like', async function (ctx, next) {
                         console.log('ERROr');
                         return resolve(-2);
                     }
-
+                    console.log('delete 之前!!!!!!!!!!!!!!!!!!!!')
+                    console.log(docs);
                     delete docs.list;
+                    console.log('delete 之后!!!!!!!!!!!!!!!!!!!!')
+                    console.log(docs);
                     user.like.unshift(docs);
                     user.save(function (err, doc) {
                         if(err){
