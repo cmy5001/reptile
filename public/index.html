@@ -273,9 +273,9 @@
         <div class="action">
             <div class="login-btn">登录</div>
             <div class="register-btn">注册</div>
-            <div class="like-album">心动集</div>
         </div>
         <div class="user">
+            <div class="like-album">心动集</div>
             <div class="name"></div>
         </div>
     </div>
@@ -359,6 +359,9 @@
         function getList(){
 
             $.get('/showImages',{page:page,tag:tag,title:title,token:token},function(data){
+                if(!data || !data.length){
+                    alert('没有您要找的内容哦~')
+                }
                 var tpl = document.getElementById('tpl').innerHTML;
                 var html = template(tpl, {list: data});
                 $('.container').html(html);

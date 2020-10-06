@@ -331,6 +331,9 @@
         function getList(){
 
             $.get('/showImages',{page:page,tag:tag,like:1,title:title,token:token},function(data){
+                if(!data || !data.length){
+                    alert('您的心动集是空的哦,快来添加吧~')
+                }
                 var tpl = document.getElementById('tpl').innerHTML;
                 var html = template(tpl, {list: data});
                 $('.container').html(html);
