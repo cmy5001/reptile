@@ -157,7 +157,7 @@ router.get('/like', async function (ctx, next) {
                         return resolve(-2);
                     }
 
-                    user.like.push(docs);
+                    user.like.unshift(docs);
                     user.save(function (err, doc) {
                         if(err){
                             console.log('添加失败!!!', doc)
