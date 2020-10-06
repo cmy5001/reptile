@@ -157,6 +157,7 @@ router.get('/like', async function (ctx, next) {
                         return resolve(-2);
                     }
 
+                    delete docs.list;
                     user.like.unshift(docs);
                     user.save(function (err, doc) {
                         if(err){
